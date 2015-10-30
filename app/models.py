@@ -9,14 +9,11 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
     unicode_literals)
 
-import savalidation.validators as val
-
 from datetime import datetime as dt
 from app import db
-from savalidation import ValidationMixin
 
 
-class ACLED(db.Model, ValidationMixin):
+class BaseMixin(object):
     # auto keys
     id = db.Column(db.Integer, primary_key=True)
     utc_created = db.Column(db.DateTime, nullable=False, default=dt.utcnow())
@@ -27,6 +24,7 @@ class ACLED(db.Model, ValidationMixin):
     event_type = db.Column(db.String(128), nullable=False)
     fatalities = db.Column(db.Integer, nullable=False)
     year = db.Column(db.Integer, nullable=False)
+    year_month = db.Column(db.String(8), nullable=False)
     geo_precision = db.Column(db.String(128), nullable=False)
     source = db.Column(db.String(128), nullable=False)
     location = db.Column(db.String(128), nullable=False)
@@ -48,9 +46,3 @@ class ACLED(db.Model, ValidationMixin):
     notes = db.Column(db.String(1024), nullable=False)
     actor2 = db.Column(db.String(128), nullable=False)
     actor1 = db.Column(db.String(128), nullable=False)
-
-    # validation
-    val.validates_constraints()
-
-    def __repr__(self):
-        return ('<Shipments(%r, %r)>' % (self.item, self.year))

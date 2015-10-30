@@ -10,7 +10,6 @@ _project = 'hdxscraper-acled'
 # configuration
 class Config(object):
     BASE_URL = 'http://www.acleddata.com/wp-content/uploads/'
-    TABLE = 'ACLED'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(_basedir, _db_name)
     API_LIMIT = 1000
     SW = False

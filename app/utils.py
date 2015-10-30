@@ -19,10 +19,14 @@ import smtplib
 import logging
 import scraperwiki
 import requests
+import itertools as it
 
 from os import environ, path as p
 from email.mime.text import MIMEText
 from tempfile import SpooledTemporaryFile
+from datetime import datetime as dt
+
+from dateutil.parser import parse
 from bs4 import BeautifulSoup
 
 from config import _project
@@ -115,7 +119,12 @@ def gen_data(config):
     r = requests.get(url)
     f = SpooledTemporaryFile()  # wrap to access `fileno`
     f.write(r.content)
+
     records = io.read_xls(f, sanitize=True, encoding=r.encoding)
+    year = dt.now().year
 
     for record in records:
+        month = parse(record['event_date']).month
+        month = '0%s' % month if month < 10 else month
+        record['year_month'] = '%s%s' % (year, month)
         yield record
