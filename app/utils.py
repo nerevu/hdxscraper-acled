@@ -122,8 +122,9 @@ def gen_data(config):
 
     records = io.read_xls(f, sanitize=True, encoding=r.encoding)
     year = dt.now().year
+    filtered = it.ifilter(lambda r: int(float(r['year'])) == year, records)
 
-    for record in records:
+    for record in filtered:
         month = parse(record['event_date']).month
         month = '0%s' % month if month < 10 else month
         record['year_month'] = '%s%s' % (year, month)
