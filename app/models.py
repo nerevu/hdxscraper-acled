@@ -25,8 +25,8 @@ class ACLED(db.Model, ValidationMixin):
 
     # other keys
     event_type = db.Column(db.String(128), nullable=False)
-    fatalities = db.Column(db.Numeric, nullable=False)
-    year = db.Column(db.Numeric, nullable=False)
+    fatalities = db.Column(db.Integer, nullable=False)
+    year = db.Column(db.Integer, nullable=False)
     geo_precision = db.Column(db.String(128), nullable=False)
     source = db.Column(db.String(128), nullable=False)
     location = db.Column(db.String(128), nullable=False)

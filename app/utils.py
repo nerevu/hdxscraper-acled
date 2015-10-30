@@ -116,8 +116,4 @@ def gen_data(config):
     records = io.read_xls(f, sanitize=True, encoding=r.encoding)
 
     for record in records:
-        record['year'] = int(float(record['year']))
-        record['fatalities'] = int(float(record['fatalities']))
-        record['latitude'] = float(record['latitude'])
-        record['longitude'] = float(record['longitude'])
         yield record
