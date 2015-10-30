@@ -24,6 +24,7 @@ Collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-
 *ScraperWiki Box*
 
     source venv/bin/activate
-    manage -m Scraper run
+    screen manage -m Scraper run
+    Now press `Ctrl-a d`
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
