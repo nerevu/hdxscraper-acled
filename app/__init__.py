@@ -14,7 +14,7 @@ import config
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
-__version__ = '0.6.2'
+__version__ = '0.7.0'
 
 __title__ = 'hdxscraper-acled'
 __author__ = 'Reuben Cummings'
