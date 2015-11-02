@@ -4,15 +4,21 @@ from __future__ import (
     unicode_literals)
 
 import os.path as p
+import itertools as it
+import swutils
+import config
 
 from subprocess import call
+from operator import itemgetter
 
 from pprint import pprint
 from flask import current_app as app
 from flask.ext.script import Manager
 from tabutils.fntools import chunk
 
-from app import create_app, db, utils, models
+from app import create_app, db, utils, __title__
+from app.models import BaseMixin
+
 
 manager = Manager(create_app)
 manager.add_option('-m', '--mode', default='Development')
@@ -81,11 +87,7 @@ def setup():
 
 def populate():
     """Populates db with most recent data"""
-    limit = 0
-
     with app.app_context():
-        table_name = app.config['TABLE']
-        table = getattr(models, table_name)
         row_limit = app.config['ROW_LIMIT']
         chunk_size = min(row_limit or 'inf', app.config['CHUNK_SIZE'])
         debug, test = app.config['DEBUG'], app.config['TESTING']
@@ -94,44 +96,55 @@ def populate():
             createdb()
 
         data = utils.gen_data(app.config)
+        keyfunc = itemgetter('year_month')
 
-        del_count = table.query.delete(synchronize_session=False)
-        db.session.commit()
+        for ym, group in it.groupby(sorted(data, key=keyfunc), keyfunc):
+            count = 0
+            name = 'YM%s' % ym
+            table_name = name.lower()
 
-        if debug:
-            print(
-                'Deleted %s records from the %s table...' % (
-                    del_count, table_name))
+            # dynamically create sqlalchemy table
+            attrs = {'__tablename__': table_name}
+            table = type(str(name), (db.Model, BaseMixin), attrs)
 
-        for records in chunk(data, chunk_size):
-            in_count = len(records)
-            limit += in_count
+            if debug:
+                print('Respawning table %s' % table_name)
+
+            table.__table__.drop(db.engine, checkfirst=True)
+            table.__table__.create(db.engine)
+
+            for records in chunk(group, chunk_size):
+                in_count = len(records)
+                count += in_count
+
+                if debug:
+                    print(
+                        'Inserting %s records into table `%s`...' % (
+                            in_count, table_name))
+
+                if test:
+                    pprint(records)
+
+                db.engine.execute(table.__table__.insert(), records)
+
+                if row_limit and count >= row_limit:
+                    break
 
             if debug:
                 print(
-                    'Inserting %s records into the %s table...' % (
-                        in_count, table_name))
-
-            if test:
-                pprint(records)
-
-            db.engine.execute(table.__table__.insert(), records)
-
-            if row_limit and limit >= row_limit:
-                break
-
-        if debug:
-            print(
-                'Successfully inserted %s records into the %s table!' % (
-                    limit, table_name))
+                    'Successfully inserted %s records into table `%s`!' % (
+                        count, table_name))
 
 
 @manager.command
 def run():
     """Populates all tables in db with most recent data"""
     with app.app_context():
-        sw = app.config['SW']
-        utils.run_or_schedule(populate, sw, utils.exception_handler)
+        logfile = app.config['LOGFILE']
+        open(logfile, 'w').close() if not p.exists(logfile) else None
+        args = (config.RECIPIENT, logfile, __title__)
+        exception_handler = swutils.ExceptionHandler(*args).handler
+        swutils.run_or_schedule(populate, app.config['SW'], exception_handler)
 
 
 if __name__ == '__main__':

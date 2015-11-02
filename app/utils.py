@@ -13,71 +13,15 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
     unicode_literals)
 
-import time
-import schedule as sch
-import smtplib
-import logging
-import scraperwiki
 import requests
+import itertools as it
 
-from os import environ, path as p
-from email.mime.text import MIMEText
 from tempfile import SpooledTemporaryFile
+from datetime import datetime as dt
+
+from dateutil.parser import parse
 from bs4 import BeautifulSoup
-
-from config import _project
 from tabutils import io
-
-_basedir = p.dirname(__file__)
-_parentdir = p.dirname(_basedir)
-_schedule_time = '10:30'
-_recipient = 'reubano@gmail.com'
-
-logging.basicConfig()
-logger = logging.getLogger(_project)
-
-
-def send_email(_to, _from=None, subject=None, text=None):
-    user = environ.get('user')
-    _from = _from or '%s@scraperwiki.com' % user
-    subject = subject or 'scraperwiki box %s failed' % user
-    text = text or 'https://scraperwiki.com/dataset/%s' % user
-    msg = MIMEText(text)
-    msg['Subject'], msg['From'], msg['To'] = subject, _from, _to
-
-    # Send the message via our own SMTP server, but don't include the envelope
-    # header.
-    s = smtplib.SMTP('localhost')
-    s.sendmail(_from, [_to], msg.as_string())
-    s.quit()
-
-
-def exception_handler(func):
-    def wrapper(*args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except Exception as e:
-            logger.exception(str(e))
-            scraperwiki.status('error', 'Error collecting data')
-
-            with open(p.join(_parentdir, 'http', 'log.txt'), 'rb') as f:
-                send_email(_recipient, text=f.read())
-        else:
-            scraperwiki.status('ok')
-
-    return wrapper
-
-
-def run_or_schedule(job, schedule=False, exception_handler=None):
-    job()
-
-    if schedule:
-        job = exception_handler(job) if exception_handler else job
-        sch.every(1).day.at(_schedule_time).do(job)
-
-        while True:
-            sch.run_pending()
-            time.sleep(1)
 
 
 def gen_data(config):
@@ -105,19 +49,23 @@ def gen_data(config):
     name = 'acled-all-africa-file'
     filterer = lambda l: l.lower().startswith(name) and 'xls' in l
     files = sorted(filter(filterer, links))
-    ftups = [(f.split('.')[0].split('-')[5], f) for f in files]
-    filename = sorted(ftups)[-1][1]
-    url += filename
 
-    # download the file
-    r = requests.get(url)
-    f = SpooledTemporaryFile()  # wrap to access `fileno`
-    f.write(r.content)
-    records = io.read_xls(f, sanitize=True, encoding=r.encoding)
+    if files:
+        ftups = [(f.split('.')[0].split('-')[5], f) for f in files]
+        filename = sorted(ftups)[-1][1]
+        url += filename
 
-    for record in records:
-        record['year'] = int(float(record['year']))
-        record['fatalities'] = int(float(record['fatalities']))
-        record['latitude'] = float(record['latitude'])
-        record['longitude'] = float(record['longitude'])
-        yield record
+        # download the file
+        r = requests.get(url)
+        f = SpooledTemporaryFile()  # wrap to access `fileno`
+        f.write(r.content)
+
+        records = io.read_xls(f, sanitize=True, encoding=r.encoding)
+        year = dt.now().year
+        filtered = it.ifilter(lambda r: int(float(r['year'])) == year, records)
+
+        for record in filtered:
+            month = parse(record['event_date']).month
+            month = '0%s' % month if month < 10 else month
+            record['year_month'] = '%s%s' % (year, month)
+            yield record

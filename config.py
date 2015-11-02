@@ -1,17 +1,28 @@
+# -*- coding: utf-8 -*-
+# vim: sw=4:ts=4:expandtab
+
+"""
+config
+~~~~~~
+
+Provides app configuration settings
+"""
+
+from __future__ import (
+    absolute_import, division, print_function, with_statement,
+    unicode_literals)
+
 from os import path as p
 
-# module vars
-_basedir = p.dirname(__file__)
-_parentdir = p.dirname(_basedir)
-_db_name = 'scraperwiki.sqlite'
-_project = 'hdxscraper-acled'
+BASEDIR = p.dirname(__file__)
+PARENTDIR = p.dirname(BASEDIR)
+DB_NAME = 'scraperwiki.sqlite'
+RECIPIENT = 'reubano@gmail.com'
 
 
-# configuration
 class Config(object):
     BASE_URL = 'http://www.acleddata.com/wp-content/uploads/'
-    TABLE = 'ACLED'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(_basedir, _db_name)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(BASEDIR, DB_NAME)
     API_LIMIT = 1000
     SW = False
     DEBUG = False
@@ -19,12 +30,13 @@ class Config(object):
     PROD = False
     CHUNK_SIZE = 2 ** 14
     ROW_LIMIT = None
+    LOGFILE = p.join(PARENTDIR, 'http', 'log.txt')
 
 
 class Scraper(Config):
     PROD = True
     SW = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(_parentdir, _db_name)
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(PARENTDIR, DB_NAME)
 
 
 class Production(Config):
@@ -33,13 +45,13 @@ class Production(Config):
 
 class Development(Config):
     DEBUG = True
-    API_LIMIT = 50
+    CHUNK_SIZE = 2 ** 4
     ROW_LIMIT = 50
 
 
 class Test(Config):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
     DEBUG = True
-    API_LIMIT = 10
+    CHUNK_SIZE = 2 ** 4
     ROW_LIMIT = 10
     TESTING = True
