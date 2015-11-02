@@ -8,7 +8,7 @@ Collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-
 
 (You are using a [virtualenv](http://www.virtualenv.org/en/latest/index.html), right?)
 
-    sudo pip install -r requirements.txt
+    pip install -r requirements.txt
     manage setup
 
 *ScraperWiki Box*
