@@ -37,7 +37,8 @@ _parentdir = p.dirname(_basedir)
 _schedule_time = '10:30'
 _recipient = 'reubano@gmail.com'
 
-logging.basicConfig()
+logfile = p.join(_parentdir, 'http', 'log.txt')
+logging.basicConfig(filename=logfile, level=logging.DEBUG)
 logger = logging.getLogger(_project)
 
 
@@ -45,8 +46,9 @@ def send_email(_to, _from=None, subject=None, text=None):
     user = environ.get('USER')
     _from = _from or '%s@scraperwiki.com' % user
     subject = subject or 'scraperwiki box %s failed' % user
-    text = text or 'https://scraperwiki.com/dataset/%s' % user
-    msg = MIMEText(text)
+    source = 'https://scraperwiki.com/dataset/%s\n\n' % user
+    body = source + text
+    msg = MIMEText(body)
     msg['Subject'], msg['From'], msg['To'] = subject, _from, _to
 
     # Send the message via our own SMTP server, but don't include the envelope
@@ -64,7 +66,7 @@ def exception_handler(func):
             logger.exception(str(e))
             scraperwiki.status('error', 'Error collecting data')
 
-            with open(p.join(_parentdir, 'http', 'log.txt'), 'rb') as f:
+            with open(logfile, 'rb') as f:
                 send_email(_recipient, text=f.read())
         else:
             scraperwiki.status('ok')
