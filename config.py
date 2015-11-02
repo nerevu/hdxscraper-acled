@@ -1,3 +1,17 @@
+# -*- coding: utf-8 -*-
+# vim: sw=4:ts=4:expandtab
+
+"""
+config
+~~~~~~
+
+Provides app configuration settings
+"""
+
+from __future__ import (
+    absolute_import, division, print_function, with_statement,
+    unicode_literals)
+
 from os import path as p
 
 BASEDIR = p.dirname(__file__)
@@ -6,7 +20,6 @@ DB_NAME = 'scraperwiki.sqlite'
 RECIPIENT = 'reubano@gmail.com'
 
 
-# configuration
 class Config(object):
     BASE_URL = 'http://www.acleddata.com/wp-content/uploads/'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(BASEDIR, DB_NAME)
