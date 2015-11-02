@@ -113,21 +113,23 @@ def gen_data(config):
     name = 'acled-all-africa-file'
     filterer = lambda l: l.lower().startswith(name) and 'xls' in l
     files = sorted(filter(filterer, links))
-    ftups = [(f.split('.')[0].split('-')[5], f) for f in files]
-    filename = sorted(ftups)[-1][1]
-    url += filename
 
-    # download the file
-    r = requests.get(url)
-    f = SpooledTemporaryFile()  # wrap to access `fileno`
-    f.write(r.content)
+    if files:
+        ftups = [(f.split('.')[0].split('-')[5], f) for f in files]
+        filename = sorted(ftups)[-1][1]
+        url += filename
 
-    records = io.read_xls(f, sanitize=True, encoding=r.encoding)
-    year = dt.now().year
-    filtered = it.ifilter(lambda r: int(float(r['year'])) == year, records)
+        # download the file
+        r = requests.get(url)
+        f = SpooledTemporaryFile()  # wrap to access `fileno`
+        f.write(r.content)
 
-    for record in filtered:
-        month = parse(record['event_date']).month
-        month = '0%s' % month if month < 10 else month
-        record['year_month'] = '%s%s' % (year, month)
-        yield record
+        records = io.read_xls(f, sanitize=True, encoding=r.encoding)
+        year = dt.now().year
+        filtered = it.ifilter(lambda r: int(float(r['year'])) == year, records)
+
+        for record in filtered:
+            month = parse(record['event_date']).month
+            month = '0%s' % month if month < 10 else month
+            record['year_month'] = '%s%s' % (year, month)
+            yield record
