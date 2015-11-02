@@ -14,7 +14,7 @@ from flask import current_app as app
 from flask.ext.script import Manager
 from tabutils.fntools import chunk
 
-from app import create_app, db, utils, models
+from app import create_app, db, utils
 from app.models import BaseMixin
 
 
