@@ -140,7 +140,9 @@ def populate():
 def run():
     """Populates all tables in db with most recent data"""
     with app.app_context():
-        args = (config.RECIPIENT, app.config['LOGFILE'], __title__)
+        logfile = app.config['LOGFILE']
+        open(logfile, 'w').close() if not p.exists(logfile) else None
+        args = (config.RECIPIENT, logfile, __title__)
         exception_handler = swutils.ExceptionHandler(*args).handler
         swutils.run_or_schedule(populate, app.config['SW'], exception_handler)
 
