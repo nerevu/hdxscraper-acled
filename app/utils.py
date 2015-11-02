@@ -75,7 +75,7 @@ def exception_handler(func):
 
 
 def run_or_schedule(job, schedule=False, exception_handler=None):
-    if exception_handler:
+    if exception_handler and schedule:
         job = exception_handler(job)
 
     job()
