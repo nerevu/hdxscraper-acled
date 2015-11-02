@@ -42,7 +42,7 @@ logger = logging.getLogger(_project)
 
 
 def send_email(_to, _from=None, subject=None, text=None):
-    user = environ.get('user')
+    user = environ.get('USER')
     _from = _from or '%s@scraperwiki.com' % user
     subject = subject or 'scraperwiki box %s failed' % user
     text = text or 'https://scraperwiki.com/dataset/%s' % user
