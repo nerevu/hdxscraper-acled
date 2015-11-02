@@ -13,79 +13,15 @@ from __future__ import (
     absolute_import, division, print_function, with_statement,
     unicode_literals)
 
-import time
-import schedule as sch
-import smtplib
-import logging
-import scraperwiki
 import requests
 import itertools as it
 
-from os import environ, path as p
-from email.mime.text import MIMEText
 from tempfile import SpooledTemporaryFile
 from datetime import datetime as dt
 
 from dateutil.parser import parse
 from bs4 import BeautifulSoup
-
-from config import _project
 from tabutils import io
-
-_basedir = p.dirname(__file__)
-_parentdir = p.dirname(_basedir)
-_schedule_time = '10:30'
-_recipient = 'reubano@gmail.com'
-
-logfile = p.join(_parentdir, 'http', 'log.txt')
-logging.basicConfig(filename=logfile, level=logging.DEBUG)
-logger = logging.getLogger(_project)
-
-
-def send_email(_to, _from=None, subject=None, text=None):
-    user = environ.get('USER')
-    _from = _from or '%s@scraperwiki.com' % user
-    subject = subject or 'scraperwiki box %s failed' % user
-    source = 'https://scraperwiki.com/dataset/%s\n\n' % user
-    body = source + text
-    msg = MIMEText(body)
-    msg['Subject'], msg['From'], msg['To'] = subject, _from, _to
-
-    # Send the message via our own SMTP server, but don't include the envelope
-    # header.
-    s = smtplib.SMTP('localhost')
-    s.sendmail(_from, [_to], msg.as_string())
-    s.quit()
-
-
-def exception_handler(func):
-    def wrapper(*args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except Exception as e:
-            logger.exception(str(e))
-            scraperwiki.status('error', 'Error collecting data')
-
-            with open(logfile, 'rb') as f:
-                send_email(_recipient, text=f.read())
-        else:
-            scraperwiki.status('ok')
-
-    return wrapper
-
-
-def run_or_schedule(job, schedule=False, exception_handler=None):
-    if exception_handler and schedule:
-        job = exception_handler(job)
-
-    job()
-
-    if schedule:
-        sch.every(1).day.at(_schedule_time).do(job)
-
-        while True:
-            sch.run_pending()
-            time.sleep(1)
 
 
 def gen_data(config):

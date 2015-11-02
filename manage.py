@@ -5,6 +5,8 @@ from __future__ import (
 
 import os.path as p
 import itertools as it
+import swutils
+import config
 
 from subprocess import call
 from operator import itemgetter
@@ -14,7 +16,7 @@ from flask import current_app as app
 from flask.ext.script import Manager
 from tabutils.fntools import chunk
 
-from app import create_app, db, utils
+from app import create_app, db, utils, __title__
 from app.models import BaseMixin
 
 
@@ -138,8 +140,9 @@ def populate():
 def run():
     """Populates all tables in db with most recent data"""
     with app.app_context():
-        sw = app.config['SW']
-        utils.run_or_schedule(populate, sw, utils.exception_handler)
+        args = (config.RECIPIENT, app.config['LOGFILE'], __title__)
+        exception_handler = swutils.ExceptionHandler(*args).handler
+        swutils.run_or_schedule(populate, app.config['SW'], exception_handler)
 
 
 if __name__ == '__main__':
