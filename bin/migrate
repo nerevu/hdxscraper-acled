@@ -1,0 +1,18 @@
+#!/usr/bin/env bash -u
+
+# Creates private datasets in CKAN
+
+base="https://ds-ec2.scraperwiki.com/dghykmr/umkfikfub2ahqa2/cgi-bin/csv"
+oid="acled"
+tsource="ACLED"
+url=`printenv CKAN_PROD_URL`
+# url=`printenv CKAN_REMOTE_URL`
+
+{
+  while read -r line || [[ -n "$line" ]]; do
+    IFS=','
+    row=($line)
+    ckanny pk.create -ps "'$tsource'" -t "'${row[0]}'" -f "${base}/${row[1]}.csv" -n "'${row[0]}'" -r "$url" -S "${row[2]}" -e "${row[3]}" "$oid"
+  done
+} < "datasets/tables.csv"
+

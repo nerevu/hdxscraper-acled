@@ -147,5 +147,10 @@ def run():
         swutils.run_or_schedule(populate, app.config['SW'], exception_handler)
 
 
+@manager.command
+def migrate():
+    """Adds datasets to a CKAN instance"""
+    call(p.join(_basedir, 'bin', 'migrate'))
+
 if __name__ == '__main__':
     manager.run()

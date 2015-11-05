@@ -50,6 +50,10 @@ ckanutils requires the following in order to run properly:
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
+## Migrate tables to HDX/CKAN
+
+    manage migrate
+
 ## Contributing
 
 1. fork
