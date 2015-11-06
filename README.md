@@ -52,7 +52,13 @@ The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
 ## Migrate tables to HDX/CKAN
 
+*migrate to production site*
+
     manage migrate
+
+*migrate to staging site*
+
+    manage migrate -s
 
 ## Contributing
 

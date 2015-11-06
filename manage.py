@@ -99,10 +99,11 @@ def run():
         swutils.run_or_schedule(populate, app.config['SW'], exception_handler)
 
 
-@manager.command
-def migrate():
-    """Adds datasets to a CKAN instance"""
-    call(p.join(_basedir, 'bin', 'migrate'))
+@manager.option(
+    '-s', '--stag', help='migrate to staging site', action='store_true')
+def migrate(stag=False):
+    """Run nose tests"""
+    call([p.join(_basedir, 'bin', 'migrate'), 'stag' if stag else 'prod'])
 
 if __name__ == '__main__':
     manager.run()
