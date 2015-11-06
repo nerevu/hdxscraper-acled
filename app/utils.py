@@ -24,9 +24,9 @@ from bs4 import BeautifulSoup
 from tabutils import io
 
 
-def gen_data(config):
+def gen_data(**kwargs):
     """Fetches realtime data and generates records"""
-    url = config['BASE_URL']
+    url = kwargs['BASE_URL']
 
     # find the newest year
     r = requests.get(url)

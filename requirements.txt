@@ -15,5 +15,5 @@ schedule==0.3.2
 tabutils==0.18.1
 beautifulsoup4==4.4.1
 pkutils==0.6.1
-swutils==0.6.2
+swutils==0.8.1
 ckanny==0.14.0
