@@ -22,6 +22,7 @@ RECIPIENT = 'reubano@gmail.com'
 
 class Config(object):
     BASE_URL = 'http://www.acleddata.com/wp-content/uploads/'
+    KEY = 'year_month'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(BASEDIR, DB_NAME)
     API_LIMIT = 1000
     SW = False
@@ -30,13 +31,14 @@ class Config(object):
     PROD = False
     CHUNK_SIZE = 2 ** 14
     ROW_LIMIT = None
-    LOGFILE = p.join(PARENTDIR, 'http', 'log.txt')
+    LOGFILE = p.join(BASEDIR, 'http', 'log.txt')
 
 
 class Scraper(Config):
     PROD = True
     SW = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(PARENTDIR, DB_NAME)
+    LOGFILE = p.join(PARENTDIR, 'http', 'log.txt')
 
 
 class Production(Config):

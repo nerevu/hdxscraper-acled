@@ -8,8 +8,6 @@ Jinja2==2.7.3
 manage.py==0.2.10
 MarkupSafe==0.23
 python-dateutil==2.4.2
-SAValidation==0.3.0
-six==1.9.0
 SQLAlchemy==1.0.6
 requests==2.8.1
 scraperwiki==0.4.1
@@ -17,4 +15,5 @@ schedule==0.3.2
 tabutils==0.18.1
 beautifulsoup4==4.4.1
 pkutils==0.6.1
-swutils==0.6.2
+swutils==0.8.1
+ckanny==0.14.0
