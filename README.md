@@ -12,12 +12,12 @@ This collector operates in the following way:
 
 ## Requirements
 
-ckanutils has been tested on the following configuration:
+hdxscraper-acled has been tested on the following configuration:
 
 - MacOS X 10.9.5
 - Python 2.7.10
 
-ckanutils requires the following in order to run properly:
+hdxscraper-acled requires the following in order to run properly:
 
 - [Python >= 2.7](http://www.python.org/download) (MacOS X comes with python preinstalled)
 
@@ -59,6 +59,17 @@ The results will be stored in a SQLite database `scraperwiki.sqlite`.
 *migrate to staging site*
 
     manage migrate -s
+
+## Configuration
+
+hdxscraper-acled will use the following [Environment Variables](http://www.cyberciti.biz/faq/set-environment-variable-linux/) if set:
+
+Environment Variable|Description
+--------------------|-----------
+CKAN_API_KEY|Your CKAN API Key
+CKAN_PROD_URL|Your CKAN instance remote production url
+CKAN_REMOTE_URL|Your CKAN instance remote staging url
+CKAN_USER_AGENT|Your user agent
 
 ## Contributing
 
