@@ -100,10 +100,11 @@ def run():
 
 
 @manager.option(
-    '-s', '--stag', help='migrate to staging site', action='store_true')
-def migrate(stag=False):
+    '-s', '--stag', help='upload to staging site', action='store_true')
+def upload(stag=False):
     """Run nose tests"""
-    call([p.join(_basedir, 'bin', 'migrate'), 'stag' if stag else 'prod'])
+    call([p.join(_basedir, 'bin', 'upload'), 'stag' if stag else 'prod'])
+
 
 if __name__ == '__main__':
     manager.run()

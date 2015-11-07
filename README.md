@@ -50,15 +50,15 @@ hdxscraper-acled requires the following in order to run properly:
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
-## Migrate tables to HDX/CKAN
+## Upload tables to HDX/CKAN
 
-*migrate to production site*
+*upload to production site*
 
-    manage migrate
+    manage upload
 
-*migrate to staging site*
+*upload to staging site*
 
-    manage migrate -s
+    manage upload -s
 
 ## Configuration
 
