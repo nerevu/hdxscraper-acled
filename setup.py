@@ -9,10 +9,9 @@ except ImportError:
 
 sys.dont_write_bytecode = True
 requirements = list(pkutils.parse_requirements('requirements.txt'))
-dev_requirements = list(pkutils.parse_requirements('dev-requirements.txt'))
 dependencies = list(pkutils.parse_requirements('requirements.txt', dep=True))
+dev_requirements = list(pkutils.parse_requirements('dev-requirements.txt'))
 readme = pkutils.read('README.md')
-changes = pkutils.read('CHANGES.rst').replace('.. :changelog:', '')
 license = app.__license__
 name = app.__title__
 gh = 'https://github.com/reubano'
@@ -28,6 +27,8 @@ setup(
     download_url='%s/%s/downloads/%s*.tgz' % (gh, name, name),
     include_package_data=True,
     install_requires=requirements,
+    dependency_links=dependencies,
+    tests_require=dev_requirements,
     classifiers=[
         pkutils.LICENSES[license],
         'Development Status :: 4 - Beta',
@@ -40,7 +41,7 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: Microsoft :: POSIX'
     ],
-    keywords=[name],
+    keywords=[name, 'scraperwiki', 'api'],
     packages=find_packages(exclude=['tests']),
     package_data={},
     zip_safe=False,
