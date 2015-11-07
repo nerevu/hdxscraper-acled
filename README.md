@@ -1,6 +1,6 @@
 # ACLED Realtime Data Collector
 
-Collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-2015/).
+[HDX](https://data.hdx.rwlabs.org/organization/acled) collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-2015/).
 
 ## Introduction
 
@@ -19,7 +19,7 @@ hdxscraper-acled has been tested on the following configuration:
 
 hdxscraper-acled requires the following in order to run properly:
 
-- [Python >= 2.7](http://www.python.org/download) (MacOS X comes with python preinstalled)
+- [Python >= 2.7](http://www.python.org/download) (MacOS X comes with python pre-installed)
 
 ## Setup
 
@@ -50,7 +50,7 @@ hdxscraper-acled requires the following in order to run properly:
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
-## Upload tables to HDX/CKAN
+## Upload tables to [HDX](http://data.hdx.rwlabs.org/)/[CKAN](http://ckan.org/)
 
 *upload to production site*
 
@@ -71,13 +71,31 @@ CKAN_PROD_URL|Your CKAN instance remote production url
 CKAN_REMOTE_URL|Your CKAN instance remote staging url
 CKAN_USER_AGENT|Your user agent
 
+## Creating a new collector
+
+If you would like to create collector or scraper from scratch, check out [cookiecutter-collector](https://github.com/reubano/cookiecutter-collector).
+
 ## Contributing
+
+### Code
 
 1. fork
 2. commit
 3. submit PR
 4. ???
 5. PROFIT!!!
+
+### Document
+
+- improve this readme
+- add comments to confusing parts of the code
+- write a "Getting Started" guide
+- write additional deployment instructions ([Heroku](http://heroku.com/), [AWS](http://aws.amazon.com/), [Digital Ocean](http://digitalocean.com/, [GAE](https://appengine.google.com/))
+
+### QA
+
+1. follow this guide and see if everything works as expected
+2. if something doesn't work, please submit an issue
 
 ## License
 
