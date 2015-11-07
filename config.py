@@ -24,6 +24,7 @@ class Config(object):
     BASE_URL = 'http://www.acleddata.com/wp-content/uploads/'
     KEY = 'year_month'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///%s' % p.join(BASEDIR, DB_NAME)
+    LOGFILE = p.join(BASEDIR, 'http', 'log.txt')
     API_LIMIT = 1000
     SW = False
     DEBUG = False
@@ -31,7 +32,6 @@ class Config(object):
     PROD = False
     CHUNK_SIZE = 2 ** 14
     ROW_LIMIT = None
-    LOGFILE = p.join(BASEDIR, 'http', 'log.txt')
 
 
 class Scraper(Config):
