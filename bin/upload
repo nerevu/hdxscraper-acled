@@ -23,7 +23,7 @@ echo "Uploading data to $URL..."
 {
   read
   while read -r line || [[ -n "$line" ]]; do
-    IFS=','
+    IFS='\t'
     ROW=($line)
     ckanny pk.create \
       -ps "$TSOURCE" \
@@ -37,4 +37,4 @@ echo "Uploading data to $URL..."
       -r "$URL" \
       "$OID"
   done
-} < "datasets/tables.csv"
+} < "datasets/tables.tsv"
