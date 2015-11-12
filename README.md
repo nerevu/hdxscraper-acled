@@ -4,11 +4,18 @@
 
 ## Introduction
 
-This collector operates in the following way:
+hdxscraper-acled operates in the following way:
 
-- downloads the most recent `acled-all-africa` xls file by navigating the [uploads directory](http://www.acleddata.com/wp-content/uploads/)
-- groups the rows by year-month
-- dynamically creates a separate table for each group
+- Downloads the most recent `acled-all-africa` xls file by navigating the [uploads directory](http://www.acleddata.com/wp-content/uploads/)
+- Groups the rows by year-month
+- Dynamically creates a separate table for each group
+
+With hdxscraper-acled, you can
+
+- Save ACLED Realtime Data to an external database
+- Create datasets/packages for each database table
+- Upload ScraperWiki generated CSV files into a CKAN instance
+- Update resources previously uploaded to CKAN with new metadata
 
 ## Requirements
 
@@ -46,7 +53,7 @@ hdxscraper-acled requires the following in order to run properly:
     cd tool
     source venv/bin/activate
     screen manage -m Scraper run
-    Now press `Ctrl-a d`
+    # Now press `Ctrl-a d`
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
@@ -59,6 +66,19 @@ The results will be stored in a SQLite database `scraperwiki.sqlite`.
 *upload to staging site*
 
     manage upload -s
+
+## Update tables on [HDX](http://data.hdx.rwlabs.org/)/[CKAN](http://ckan.org/)
+
+*ScraperWiki Box*
+
+    cd tool
+    git reset --hard HEAD
+    git pull
+    source venv/bin/activate
+    pip install -r requirements.txt
+    screen manage -m Scraper run
+    # Now press `Ctrl-a d`
+    manage update
 
 ## Configuration
 
@@ -74,6 +94,9 @@ CKAN_USER_AGENT|Your user agent
 ## Creating a new collector
 
 If you would like to create collector or scraper from scratch, check out [cookiecutter-collector](https://github.com/reubano/cookiecutter-collector).
+
+    pip install cookiecutter
+    cookiecutter https://github.com/reubano/cookiecutter-collector.git
 
 ## Contributing
 
