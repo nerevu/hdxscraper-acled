@@ -98,8 +98,15 @@ def run():
 @manager.option(
     '-s', '--stag', help='upload to staging site', action='store_true')
 def upload(stag=False):
-    """Run nose tests"""
+    """Upload files to HDX"""
     call([p.join(_basedir, 'bin', 'upload'), 'stag' if stag else 'prod'])
+
+
+@manager.option(
+    '-s', '--stag', help='upload to staging site', action='store_true')
+def update(stag=False):
+    """Update dataset metadata"""
+    call([p.join(_basedir, 'bin', 'update'), 'stag' if stag else 'prod'])
 
 
 if __name__ == '__main__':

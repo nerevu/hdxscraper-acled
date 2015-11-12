@@ -12,29 +12,37 @@ else
   URL=`printenv CKAN_REMOTE_URL`
 fi
 
-OID="acled"
-BASE="https://ds-ec2.scraperwiki.com/dghykmr/umkfikfub2ahqa2/cgi-bin/csv"
+slugify () {
+  # convert to lowercase, replace non alpha numerics with spaces and
+  # consolidate spaces
+  slug=`echo "$1" | tr A-Z a-z | tr -cs '[[:alnum:]]' ' ' | tr -s ' '`
+
+  # remove leading and trailing spaces, and replace remaining with dashes
+  SLUG=`echo "$slug" | sed 's/^ *//g' | sed 's/ *$//g' | tr ' ' '-'`
+}
+
 TSOURCE="ACLED"
 TAGS="Conflict, Political violence, Protection, Protest, War"
 METHODOLOGY="http://www.acleddata.com/methodology/"
+SLUG=""
 
-echo "Uploading data to $URL..."
+echo "Updating data on $URL..."
 
 {
   read
   while read -r line || [[ -n "$line" ]]; do
-    IFS='\t'
+    IFS=$'\t'
     ROW=($line)
-    ckanny pk.create \
-      -ps "$TSOURCE" \
+    slugify "${ROW[0]}"
+
+    ckanny pk.update \
+      -s "$TSOURCE" \
       -t "${ROW[0]}" \
-      -n "${ROW[0]}" \
-      -f "${BASE}/${ROW[1]}.csv" \
       -S "${ROW[2]}" \
       -e "${ROW[3]}" \
       -T "$TAGS" \
       -m "$METHODOLOGY" \
       -r "$URL" \
-      "$OID"
+      "$SLUG"
   done
 } < "datasets/tables.tsv"
