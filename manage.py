@@ -98,7 +98,7 @@ def run():
 @manager.option(
     '-s', '--stag', help='upload to staging site', action='store_true')
 def upload(stag=False):
-    """Run nose tests"""
+    """Upload files to HDX"""
     call([p.join(_basedir, 'bin', 'upload'), 'stag' if stag else 'prod'])
 
 
