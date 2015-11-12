@@ -2,10 +2,14 @@
 # Creates private datasets in CKAN
 # usage bin/upload
 
-if [ "$1" == 'prod' ]; then
-  url=`printenv CKAN_PROD_URL`
+if [ $# -gt 0 ]; then
+  if [ "$1" == 'prod' ]; then
+    URL=`printenv CKAN_PROD_URL`
+  else
+    URL=`printenv CKAN_REMOTE_URL`
+  fi
 else
-  url=`printenv CKAN_REMOTE_URL`
+  URL=`printenv CKAN_REMOTE_URL`
 fi
 
 oid="acled"
