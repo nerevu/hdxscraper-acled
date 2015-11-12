@@ -15,6 +15,10 @@ fi
 OID="acled"
 BASE="https://ds-ec2.scraperwiki.com/dghykmr/umkfikfub2ahqa2/cgi-bin/csv"
 TSOURCE="ACLED"
+TAGS="Conflict, Political violence, Protection, Protest, War"
+METHODOLOGY="http://www.acleddata.com/methodology/"
+
+echo "Uploading data to $URL..."
 
 {
   read
@@ -28,6 +32,8 @@ TSOURCE="ACLED"
       -f "${BASE}/${ROW[1]}.csv" \
       -S "${ROW[2]}" \
       -e "${ROW[3]}" \
+      -T "$TAGS" \
+      -m "$METHODOLOGY" \
       -r "$URL" \
       "$OID"
   done
