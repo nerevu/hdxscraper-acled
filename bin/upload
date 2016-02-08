@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -u
+#!/usr/bin/env bash
 # Creates private datasets in CKAN
 # usage bin/upload
 
@@ -23,8 +23,9 @@ echo "Uploading data to $URL..."
 {
   read
   while read -r line || [[ -n "$line" ]]; do
-    IFS='\t'
+    IFS=$'\t'
     ROW=($line)
+
     ckanny pk.create \
       -ps "$TSOURCE" \
       -t "${ROW[0]}" \
