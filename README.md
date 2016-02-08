@@ -1,21 +1,24 @@
 # ACLED Realtime Data Collector
 
-[HDX](https://data.hdx.rwlabs.org/organization/acled) collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-2015/).
+[HDX](https://data.hdx.rwlabs.org/) collector for [ACLED Realtime Data](http://www.acleddata.com/data/realtime-data-2015/).
 
 ## Introduction
 
 hdxscraper-acled operates in the following way:
 
 - Downloads the most recent `acled-all-africa` xls file by navigating the [uploads directory](http://www.acleddata.com/wp-content/uploads/)
+- Filters for data in a given year or, if none is given, the current year
 - Groups the rows by year-month
-- Dynamically creates a separate table for each group
+- Dynamically creates a separate database table for each group
 
 With hdxscraper-acled, you can
 
 - Save ACLED Realtime Data to an external database
-- Create datasets/packages for each database table
+- Create CKAN datasets/packages for each database table
 - Upload ScraperWiki generated CSV files into a CKAN instance
 - Update resources previously uploaded to CKAN with new metadata
+
+[View the live data](https://data.hdx.rwlabs.org/organization/acled)
 
 ## Requirements
 
@@ -40,6 +43,9 @@ hdxscraper-acled requires the following in order to run properly:
 
 *ScraperWiki Box*
 
+    rm -rf tool
+    git clone https://github.com/reubano/hdxscraper-fao.git tool
+    cd tool
     make setup
 
 ## Usage
@@ -57,6 +63,10 @@ hdxscraper-acled requires the following in order to run properly:
 
 The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
+*view all available commands*
+
+    manage
+
 ## Upload tables to [HDX](http://data.hdx.rwlabs.org/)/[CKAN](http://ckan.org/)
 
 *upload to production site*
@@ -67,18 +77,23 @@ The results will be stored in a SQLite database `scraperwiki.sqlite`.
 
     manage upload -s
 
-## Update tables on [HDX](http://data.hdx.rwlabs.org/)/[CKAN](http://ckan.org/)
+## Update tables on [HDX](http://data.hdx.rwlabs.org/)/[CKAN](http://ckan.org/) with new metadata
 
-*ScraperWiki Box*
+*update dataset on production site*
+
+    manage update
+
+*update dataset on staging site*
+
+    manage update -s
+
+## Update ScraperWiki box with new code
 
     cd tool
-    git reset --hard HEAD
-    git pull
+    make update
     source venv/bin/activate
-    pip install -r requirements.txt
     screen manage -m Scraper run
     # Now press `Ctrl-a d`
-    manage update
 
 ## Configuration
 
@@ -113,7 +128,7 @@ If you would like to create collector or scraper from scratch, check out [cookie
 - improve this readme
 - add comments to confusing parts of the code
 - write a "Getting Started" guide
-- write additional deployment instructions ([Heroku](http://heroku.com/), [AWS](http://aws.amazon.com/), [Digital Ocean](http://digitalocean.com/, [GAE](https://appengine.google.com/))
+- write additional deployment instructions ([Heroku](http://heroku.com/), [AWS](http://aws.amazon.com/), [Digital Ocean](http://digitalocean.com/), [GAE](https://appengine.google.com/))
 
 ### QA
 
